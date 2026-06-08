@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Subir Resultados</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; }
+        .sidebar { width: 280px; background: #00843D; height: 100vh; position: fixed; left: 0; top: 0; color: white; }
+        .sidebar-header { padding: 30px 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .sidebar-header i { font-size: 48px; }
+        .sidebar-header h2 { font-size: 18px; }
+        .nav-menu { padding: 20px 0; }
+        .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 25px; color: rgba(255,255,255,0.85); text-decoration: none; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; border-left: 4px solid #FFD700; }
+        .main-content { margin-left: 280px; padding: 25px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: white; padding: 15px 25px; border-radius: 12px; }
+        .page-title h1 { font-size: 24px; color: #333; }
+        .logout-btn { background: #dc2626; color: white; padding: 8px 18px; border-radius: 8px; text-decoration: none; }
+        .card { background: white; border-radius: 12px; max-width: 800px; margin: 0 auto; }
+        .card-header { padding: 18px 25px; border-bottom: 1px solid #e0e0e0; background: #fafafa; }
+        .card-header h2 { font-size: 18px; color: #333; }
+        .card-header i { color: #00843D; margin-right: 10px; }
+        .card-body { padding: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .btn-save { background: #00843D; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; }
+        .btn-back { background: #6c757d; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; display: inline-block; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header"><i class="fas fa-clipboard-list"></i><h2>Coordinación UTS</h2><p>UTS Saber Pro</p></div>
+        <div class="nav-menu">
+            <a href="/coordinacion/dashboard" class="nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/coordinacion/estudiantes" class="nav-item"><i class="fas fa-users"></i> Estudiantes</a>
+            <a href="/coordinacion/resultados" class="nav-item active"><i class="fas fa-chart-line"></i> Resultados</a>
+            <a href="/coordinacion/beneficios" class="nav-item"><i class="fas fa-gift"></i> Beneficios</a>
+            <a href="/coordinacion/informe-general" class="nav-item"><i class="fas fa-file-alt"></i> Informe general</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="page-title"><h1>Subir Resultados</h1></div>
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        </div>
+        <div class="card">
+            <div class="card-header"><h2>Estudiante: <span th:text="${estudiante.usuario.nombre} + ' ' + ${estudiante.usuario.apellido}"></span></h2></div>
+            <div class="card-body">
+                <form th:action="@{/coordinacion/resultados/subir/{id}(id=${estudiante.id})}" method="post" th:object="${resultadosDTO}">
+                    <div class="row">
+                        <div class="form-group"><label>Puntaje Saber Pro</label><input type="number" th:field="*{puntajeSaberPro}" placeholder="Puntaje global"></div>
+                        <div class="form-group"><label>Puntaje TYT</label><input type="number" th:field="*{puntajeTyt}" placeholder="Puntaje TYT"></div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group"><label>Comunicación escrita</label><input type="number" th:field="*{puntajeComunicacionEscrita}"></div>
+                        <div class="form-group"><label>Nivel</label><input type="text" th:field="*{nivelComunicacionEscrita}" placeholder="Nivel 1-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group"><label>Razonamiento cuantitativo</label><input type="number" th:field="*{puntajeRazonamientoCuantitativo}"></div>
+                        <div class="form-group"><label>Nivel</label><input type="text" th:field="*{nivelRazonamientoCuantitativo}" placeholder="Nivel 1-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group"><label>Lectura crítica</label><input type="number" th:field="*{puntajeLecturaCritica}"></div>
+                        <div class="form-group"><label>Nivel</label><input type="text" th:field="*{nivelLecturaCritica}" placeholder="Nivel 1-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group"><label>Competencias ciudadanas</label><input type="number" th:field="*{puntajeCompetenciasCiudadanas}"></div>
+                        <div class="form-group"><label>Nivel</label><input type="text" th:field="*{nivelCompetenciasCiudadanas}" placeholder="Nivel 1-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group"><label>Inglés</label><input type="number" th:field="*{puntajeIngles}"></div>
+                        <div class="form-group"><label>Nivel</label><input type="text" th:field="*{nivelIngles}" placeholder="Nivel 1-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group"><label>Formulación de proyectos</label><input type="number" th:field="*{puntajeFormulacionProyectos}"></div>
+                        <div class="form-group"><label>Nivel</label><input type="text" th:field="*{nivelFormulacionProyectos}" placeholder="Nivel 1-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group"><label>Pensamiento científico</label><input type="number" th:field="*{puntajePensamientoCientifico}"></div>
+                        <div class="form-group"><label>Nivel</label><input type="text" th:field="*{nivelPensamientoCientifico}" placeholder="Nivel 1-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group"><label>Diseño de software</label><input type="number" th:field="*{puntajeDisenoSoftware}"></div>
+                        <div class="form-group"><label>Nivel</label><input type="text" th:field="*{nivelDisenoSoftware}" placeholder="Nivel 1-4"></div>
+                    </div>
+                    <a href="/coordinacion/resultados" class="btn-back"><i class="fas fa-arrow-left"></i> Cancelar</a>
+                    <button type="submit" class="btn-save"><i class="fas fa-save"></i> Guardar resultados</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

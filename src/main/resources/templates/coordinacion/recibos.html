@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Coordinación - Gestión de Pagos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; }
+        .sidebar { width: 280px; background: #00843D; height: 100vh; position: fixed; left: 0; top: 0; color: white; overflow-y: auto; }
+        .sidebar-header { padding: 30px 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .sidebar-header i { font-size: 48px; margin-bottom: 15px; }
+        .sidebar-header h2 { font-size: 18px; font-weight: 600; }
+        .sidebar-header p { font-size: 12px; opacity: 0.8; margin-top: 5px; }
+        .nav-menu { padding: 20px 0; }
+        .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 25px; color: rgba(255,255,255,0.85); text-decoration: none; transition: all 0.3s ease; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; border-left: 4px solid #FFD700; }
+        .nav-item i { width: 22px; font-size: 18px; }
+        .main-content { margin-left: 280px; padding: 25px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-link { color: #00843D; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 5px; }
+        .page-title h1 { font-size: 24px; color: #333; font-weight: 700; }
+        .logout-btn { background: #dc2626; color: white; padding: 8px 18px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px; overflow: hidden; }
+        .card-header { padding: 18px 25px; border-bottom: 1px solid #e0e0e0; background: #fafafa; }
+        .card-header h2 { font-size: 18px; font-weight: 700; color: #333; }
+        .card-header i { color: #00843D; margin-right: 10px; }
+        .card-body { padding: 25px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+        th { background: #f8f9fa; color: #333; font-weight: 600; }
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; font-weight: 500; }
+        .badge-pending { background: #fef3c7; color: #d97706; }
+        .badge-approved { background: #d1fae5; color: #00843D; }
+        .badge-rejected { background: #fee2e2; color: #dc2626; }
+        .btn-small { padding: 4px 8px; font-size: 11px; border-radius: 4px; border: none; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-approve { background: #00843D; color: white; }
+        .btn-reject { background: #dc2626; color: white; }
+        .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .form-inline { display: inline-flex; gap: 8px; align-items: center; }
+        .form-inline input { padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-clipboard-list"></i>
+            <h2>Coordinación UTS</h2>
+            <p>Saber Pro</p>
+        </div>
+        <div class="nav-menu">
+            <a href="/coordinacion/dashboard" class="nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/coordinacion/estudiantes" class="nav-item"><i class="fas fa-users"></i> Estudiantes</a>
+            <a href="/coordinacion/recibos" class="nav-item active"><i class="fas fa-receipt"></i> Recibos de Pago</a>
+            <a href="/coordinacion/resultados" class="nav-item"><i class="fas fa-chart-line"></i> Resultados</a>
+            <a href="/coordinacion/beneficios" class="nav-item"><i class="fas fa-gift"></i> Beneficios</a>
+            <a href="/coordinacion/informe-general" class="nav-item"><i class="fas fa-file-alt"></i> Informe general</a>
+            <a href="/coordinacion/resoluciones" class="nav-item"><i class="fas fa-file-pdf"></i> Resoluciones</a>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="page-title">
+                <a href="/coordinacion/dashboard" class="back-link"><i class="fas fa-arrow-left"></i> Volver al dashboard</a>
+                <h1>Gestión de Recibos de Pago</h1>
+            </div>
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-receipt"></i> Recibos pendientes de aprobación</h2>
+            </div>
+            <div class="card-body">
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Estudiante</th>
+                                <th>Cédula</th>
+                                <th>Carrera</th>
+                                <th>Fecha subida</th>
+                                <th>Archivo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="r : ${recibosPendientes}">
+                                <td th:text="${r.id}">1</td>
+                                <td th:text="${r.estudiante.usuario.nombre} + ' ' + ${r.estudiante.usuario.apellido}">-</td>
+                                <td th:text="${r.estudiante.usuario.cedula}">-</td>
+                                <td th:text="${r.estudiante.carrera != null ? r.estudiante.carrera.nombre : '-'}">-</td>
+                                <td th:text="${r.fechaSubida}">-</td>
+                                <td><a th:href="${r.archivoUrl}" target="_blank" class="btn-small" style="background:#2563eb;color:white;">Ver recibo</a></td>
+                                <td><span class="badge badge-pending">Pendiente</span></td>
+                                <td>
+                                    <div class="form-inline">
+                                        <form method="post" th:action="@{/coordinacion/recibos/aprobar/{id}(id=${r.id})}" style="display: inline;">
+                                            <button type="submit" class="btn-small btn-approve"><i class="fas fa-check"></i> Aprobar</button>
+                                        </form>
+                                        <form method="post" th:action="@{/coordinacion/recibos/rechazar/{id}(id=${r.id})}" style="display: inline;">
+                                            <input type="text" name="comentario" placeholder="Motivo" required>
+                                            <button type="submit" class="btn-small btn-reject"><i class="fas fa-times"></i> Rechazar</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${recibosPendientes == null or recibosPendientes.isEmpty()}">
+                                <td colspan="8" style="text-align: center; padding: 30px;">No hay recibos pendientes de aprobación</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-history"></i> Historial de recibos</h2>
+            </div>
+            <div class="card-body">
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Estudiante</th>
+                                <th>Fecha subida</th>
+                                <th>Estado</th>
+                                <th>Comentario</th>
+                                <th>Archivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="r : ${recibosHistorial}">
+                                <td th:text="${r.id}">1</td>
+                                <td th:text="${r.estudiante.usuario.nombre} + ' ' + ${r.estudiante.usuario.apellido}">-</td>
+                                <td th:text="${r.fechaSubida}">-</td>
+                                <td>
+                                    <span class="badge badge-approved" th:if="${r.estado.name() == 'APROBADO'}">Aprobado</span>
+                                    <span class="badge badge-rejected" th:if="${r.estado.name() == 'RECHAZADO'}">Rechazado</span>
+                                </td>
+                                <td th:text="${r.comentarioAdmin != null ? r.comentarioAdmin : '-'}">-</td>
+                                <td><a th:href="${r.archivoUrl}" target="_blank" class="btn-small" style="background:#2563eb;color:white;">Ver</a></td>
+                            </tr>
+                            <tr th:if="${recibosHistorial == null or recibosHistorial.isEmpty()}">
+                                <td colspan="6" style="text-align: center; padding: 30px;">No hay recibos en el historial</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

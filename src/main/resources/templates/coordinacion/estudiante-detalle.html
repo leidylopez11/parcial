@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle Estudiante</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; }
+        .sidebar { width: 280px; background: #00843D; height: 100vh; position: fixed; left: 0; top: 0; color: white; }
+        .sidebar-header { padding: 30px 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .sidebar-header i { font-size: 48px; }
+        .sidebar-header h2 { font-size: 18px; }
+        .nav-menu { padding: 20px 0; }
+        .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 25px; color: rgba(255,255,255,0.85); text-decoration: none; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; border-left: 4px solid #FFD700; }
+        .main-content { margin-left: 280px; padding: 25px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-link { color: #00843D; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 5px; }
+        .page-title h1 { font-size: 24px; color: #333; }
+        .logout-btn { background: #dc2626; color: white; padding: 8px 18px; border-radius: 8px; text-decoration: none; }
+        .card { background: white; border-radius: 12px; margin-bottom: 25px; }
+        .card-header { padding: 18px 25px; border-bottom: 1px solid #e0e0e0; background: #fafafa; }
+        .card-header h2 { font-size: 18px; color: #333; }
+        .card-header i { color: #00843D; margin-right: 10px; }
+        .card-body { padding: 25px; }
+        .info-row { display: flex; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .info-label { width: 180px; font-weight: 600; color: #555; }
+        .info-value { color: #333; }
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+        .badge-success { background: #d1fae5; color: #00843D; }
+        .badge-warning { background: #fef3c7; color: #d97706; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header"><i class="fas fa-clipboard-list"></i><h2>Coordinación UTS</h2><p>UTS Saber Pro</p></div>
+        <div class="nav-menu">
+            <a href="/coordinacion/dashboard" class="nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/coordinacion/estudiantes" class="nav-item active"><i class="fas fa-users"></i> Estudiantes</a>
+            <a href="/coordinacion/resultados" class="nav-item"><i class="fas fa-chart-line"></i> Resultados</a>
+            <a href="/coordinacion/beneficios" class="nav-item"><i class="fas fa-gift"></i> Beneficios</a>
+            <a href="/coordinacion/informe-general" class="nav-item"><i class="fas fa-file-alt"></i> Informe general</a>
+            <a href="/coordinacion/resoluciones" class="nav-item"><i class="fas fa-file-pdf"></i> Resoluciones</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="page-title">
+                <a href="/coordinacion/estudiantes" class="back-link"><i class="fas fa-arrow-left"></i> Volver a estudiantes</a>
+                <h1>Detalle del Estudiante</h1>
+            </div>
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        </div>
+        
+        <div class="card" th:if="${estudiante != null}">
+            <div class="card-header"><h2><i class="fas fa-user-graduate"></i> Información personal</h2></div>
+            <div class="card-body">
+                <div class="info-row"><div class="info-label">Nombre completo:</div><div class="info-value" th:text="${estudiante.usuario.nombre} + ' ' + ${estudiante.usuario.apellido}">-</div></div>
+                <div class="info-row"><div class="info-label">Cédula:</div><div class="info-value" th:text="${estudiante.usuario.cedula}">-</div></div>
+                <div class="info-row"><div class="info-label">Email:</div><div class="info-value" th:text="${estudiante.usuario.email}">-</div></div>
+                <div class="info-row"><div class="info-label">Teléfono:</div><div class="info-value" th:text="${estudiante.usuario.telefono}">-</div></div>
+                <div class="info-row"><div class="info-label">Carrera:</div><div class="info-value" th:text="${estudiante.carrera != null ? estudiante.carrera.nombre : '-'}">-</div></div>
+                <div class="info-row"><div class="info-label">Semestre:</div><div class="info-value" th:text="${estudiante.semestre}">-</div></div>
+                <div class="info-row"><div class="info-label">Estado pago:</div><div class="info-value"><span class="badge badge-success" th:if="${estudiante.pagoAprobado}">Aprobado</span><span class="badge badge-warning" th:unless="${estudiante.pagoAprobado}">Pendiente</span></div></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

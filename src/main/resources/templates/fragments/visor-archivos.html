@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!-- Fragmento para mostrar cualquier archivo -->
+    <div th:fragment="visor-archivo(tipo, nombreArchivo, titulo)">
+        <div class="card">
+            <div class="card-header">
+                <h5 th:text="${titulo} ?: 'Ver Archivo'">Ver Archivo</h5>
+            </div>
+            <div class="card-body">
+                <!-- Para PDFs -->
+                <div th:if="${nombreArchivo != null && nombreArchivo.endsWith('.pdf')}">
+                    <embed th:src="@{/ver-archivo/${tipo}/${nombreArchivo}}" 
+                           type="application/pdf"
+                           width="100%" 
+                           height="600px" />
+                </div>
+                
+                <!-- Para Imágenes -->
+                <div th:if="${nombreArchivo != null && (nombreArchivo.endsWith('.jpg') or nombreArchivo.endsWith('.png') or nombreArchivo.endsWith('.jpeg'))}">
+                    <img th:src="@{/ver-archivo/${tipo}/${nombreArchivo}}" 
+                         class="img-fluid" 
+                         alt="Documento" />
+                </div>
+                
+                <!-- Para otros archivos (descarga) -->
+                <div th:if="${nombreArchivo != null and !nombreArchivo.endsWith('.pdf') and !nombreArchivo.endsWith('.jpg') and !nombreArchivo.endsWith('.png')}">
+                    <div class="alert alert-info">
+                        <p>Este archivo no se puede previsualizar.</p>
+                        <a th:href="@{/ver-archivo/${tipo}/${nombreArchivo}}" 
+                           class="btn btn-primary"
+                           th:download="${nombreArchivo}">
+                            Descargar <i class="fas fa-download"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Si no hay archivo -->
+                <div th:if="${nombreArchivo == null}" class="alert alert-warning">
+                    No hay archivo disponible
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Enlace simple para lista/tabla -->
+    <th:block th:fragment="enlace-archivo(tipo, nombreArchivo, textoEnlace)">
+        <a th:if="${nombreArchivo != null}"
+           th:href="@{/ver-archivo/${tipo}/${nombreArchivo}}"
+           target="_blank"
+           class="btn btn-sm btn-info">
+            <i class="fas fa-file-pdf"></i> 
+            <span th:text="${textoEnlace} ?: 'Ver Archivo'">Ver Archivo</span>
+        </a>
+        <span th:if="${nombreArchivo == null}" class="text-muted">
+            Sin archivo
+        </span>
+    </th:block>
+</body>
+</html>

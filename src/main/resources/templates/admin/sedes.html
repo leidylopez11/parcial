@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Sedes UTS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; min-height: 100vh; }
+        .sidebar { width: 280px; background: #00843D; height: 100vh; position: fixed; left: 0; top: 0; color: white; overflow-y: auto; }
+        .sidebar-header { padding: 30px 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .sidebar-header i { font-size: 48px; margin-bottom: 15px; }
+        .sidebar-header h2 { font-size: 18px; font-weight: 600; }
+        .nav-menu { padding: 20px 0; }
+        .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 25px; color: rgba(255,255,255,0.85); text-decoration: none; transition: all 0.3s ease; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; border-left: 4px solid #FFD700; }
+        .nav-item i { width: 22px; font-size: 18px; }
+        .main-content { margin-left: 280px; padding: 25px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: white; padding: 15px 25px; border-radius: 12px; }
+        .page-title h1 { font-size: 24px; color: #333; font-weight: 700; }
+        .logout-btn { background: #dc2626; color: white; padding: 8px 18px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 25px; }
+        .card-header { padding: 18px 25px; border-bottom: 1px solid #e0e0e0; background: #fafafa; }
+        .card-header h2 { font-size: 18px; font-weight: 700; color: #333; }
+        .card-header i { color: #00843D; margin-right: 10px; }
+        .card-body { padding: 25px; }
+        .btn-edit { background: #00843D; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; display: inline-block; }
+        .btn-delete { background: #dc2626; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; display: inline-block; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+        th { background: #f8f9fa; color: #333; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header"><i class="fas fa-university"></i><h2>Panel Administrador</h2><p>UTS Saber Pro</p></div>
+        <div class="nav-menu">
+            <a href="/admin/dashboard" class="nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/admin/usuarios" class="nav-item"><i class="fas fa-users"></i> Usuarios</a>
+            <a href="/admin/crear-usuario" class="nav-item"><i class="fas fa-user-plus"></i> Crear Usuario</a>
+            <a href="/admin/carreras" class="nav-item"><i class="fas fa-graduation-cap"></i> Carreras</a>
+            <a href="/admin/facultades" class="nav-item"><i class="fas fa-building"></i> Facultades</a>
+            <a href="/admin/sedes" class="nav-item active"><i class="fas fa-map-marker-alt"></i> Sedes</a>
+            <a href="/admin/recibos" class="nav-item"><i class="fas fa-receipt"></i> Recibos</a>
+            <a href="/admin/resoluciones" class="nav-item"><i class="fas fa-file-pdf"></i> Resoluciones</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="page-title"><h1>Sedes</h1><p>Gestión de sedes de la universidad</p></div>
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        </div>
+        <div class="card">
+            <div class="card-header"><h2><i class="fas fa-list"></i> Lista de sedes</h2></div>
+            <div class="card-body">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Nombre</th><th>Ciudad</th><th>Dirección</th><th>Teléfono</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="s : ${sedesList}">
+                            <td th:text="${s.id}">1</td>
+                            <td th:text="${s.nombre}">-</td>
+                            <td th:text="${s.ciudad}">-</td>
+                            <td th:text="${s.direccion}">-</td>
+                            <td th:text="${s.telefono}">-</td>
+                            <td><a th:href="@{/admin/sedes/editar/{id}(id=${s.id})}" class="btn-edit"><i class="fas fa-edit"></i> Editar</a> <a th:href="@{/admin/sedes/eliminar/{id}(id=${s.id})}" class="btn-delete" onclick="return confirm('¿Eliminar esta sede?')"><i class="fas fa-trash"></i> Eliminar</a></td>
+                        </tr>
+                        <tr th:if="${sedesList.empty}"><td colspan="6" style="text-align: center;">No hay sedes registradas</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

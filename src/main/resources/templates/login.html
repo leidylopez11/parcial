@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTS - Sistema de Resultados Saber Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #00843D 0%, rgb(12, 218, 73) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            width: 100%;
+            max-width: 460px;
+            overflow: hidden;
+        }
+        
+        .login-header {
+            background: #00843D;
+            padding: 35px 30px;
+            text-align: center;
+        }
+        
+        .login-header i {
+            font-size: 55px;
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .login-header h1 {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+        
+        .login-header p {
+            color: rgba(255,255,255,0.85);
+            font-size: 14px;
+        }
+        
+        .login-body {
+            padding: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        label i {
+            color: #00843D;
+            margin-right: 8px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #00843D;
+            box-shadow: 0 0 0 3px rgba(0,132,61,0.1);
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #00843D;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #006633;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,132,61,0.3);
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .register-link a {
+            color: #00843D;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Estilos para credenciales de prueba */
+        .demo-credentials {
+            background: #f0fdf4;
+            border-top: 1px solid #bbf7d0;
+            border-bottom: 1px solid #bbf7d0;
+            padding: 15px 20px;
+        }
+        
+        .demo-credentials h4 {
+            font-size: 13px;
+            color: #00843D;
+            margin-bottom: 10px;
+        }
+        
+        .demo-credentials h4 i {
+            margin-right: 5px;
+        }
+        
+        .credential-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 12px;
+            border-bottom: 1px solid #dcfce7;
+        }
+        
+        .credential-item:last-child {
+            border-bottom: none;
+        }
+        
+        .credential-role {
+            font-weight: 600;
+            color: #333;
+            min-width: 95px;
+        }
+        
+        .credential-email {
+            color: #555;
+            font-size: 11px;
+            flex: 1;
+        }
+        
+        .credential-password {
+            color: #00843D;
+            font-weight: 600;
+        }
+        
+        .error-message, .success-message {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            border-left: 4px solid #dc2626;
+        }
+        
+        .success-message {
+            background: #dcfce7;
+            color: #00843D;
+            border-left: 4px solid #00843D;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .footer i {
+            color: #00843D;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <i class="fas fa-graduation-cap"></i>
+            <h1>UTS Saber Pro</h1>
+            <p>Sistema de gestión de resultados</p>
+        </div>
+        
+        <div class="login-body">
+            <div th:if="${param.error}" class="error-message">
+                <i class="fas fa-exclamation-circle"></i> Credenciales incorrectas
+            </div>
+            <div th:if="${param.logout}" class="success-message">
+                <i class="fas fa-check-circle"></i> Sesión cerrada correctamente
+            </div>
+            <div th:if="${param.registro}" class="success-message">
+                <i class="fas fa-check-circle"></i> Registro exitoso. Inicia sesión.
+            </div>
+            
+            <form action="/login" method="post">
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Correo electrónico</label>
+                    <input type="email" name="username" placeholder="correo@uts.edu.co" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Contraseña</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+                
+                <button type="submit">Ingresar al sistema</button>
+            </form>
+            
+            <div class="register-link">
+                <a href="/registro">¿Eres estudiante? Regístrate aquí</a>
+            </div>
+        </div>
+        
+        <!-- Credenciales de prueba -->
+        <div class="demo-credentials">
+            <h4><i class="fas fa-info-circle"></i> Cuentas de prueba</h4>
+            <div class="credential-item">
+                <span class="credential-role">👑 Admin:</span>
+                <span class="credential-email">admin@uts.edu.co</span>
+                <span class="credential-password">123456</span>
+            </div>
+            <div class="credential-item">
+                <span class="credential-role">👥 Coordinación:</span>
+                <span class="credential-email"> coordinacion@uts.edu.co</span>
+                <span class="credential-password">123456</span>
+            </div>
+            <div class="credential-item">
+                <span class="credential-role">👨‍🏫 Docente:</span>
+                <span class="credential-email">docente@uts.edu.co</span>
+                <span class="credential-password">123456</span>
+            </div>
+            <div class="credential-item">
+                <span class="credential-role">🧑‍🎓 Estudiante:</span>
+                <span class="credential-email">estudiante@uts.edu.co</span>
+                <span class="credential-password">123456</span>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><i class="fas fa-university"></i> Unidades Tecnológicas de Santander - Todos los derechos reservados</p>
+        </div>
+    </div>
+</body>
+</html>
