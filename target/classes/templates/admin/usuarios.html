@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Usuarios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; }
+        .sidebar { width: 280px; background: #00843D; height: 100vh; position: fixed; left: 0; top: 0; color: white; }
+        .sidebar-header { padding: 30px 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .sidebar-header i { font-size: 48px; }
+        .sidebar-header h2 { font-size: 18px; }
+        .nav-menu { padding: 20px 0; }
+        .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 25px; color: rgba(255,255,255,0.85); text-decoration: none; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; border-left: 4px solid #FFD700; }
+        .main-content { margin-left: 280px; padding: 25px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: white; padding: 15px 25px; border-radius: 12px; }
+        .page-title h1 { font-size: 24px; color: #333; }
+        .logout-btn { background: #dc2626; color: white; padding: 8px 18px; border-radius: 8px; text-decoration: none; }
+        .card { background: white; border-radius: 12px; }
+        .card-header { padding: 18px 25px; border-bottom: 1px solid #e0e0e0; background: #fafafa; }
+        .card-header h2 { font-size: 18px; }
+        .card-body { padding: 25px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+        th { background: #f8f9fa; font-size: 13px; }
+        td { font-size: 13px; }
+        .badge { padding: 2px 8px; border-radius: 20px; font-size: 11px; display: inline-block; }
+        .badge-admin { background: #00843D; color: white; }
+        .badge-coordinacion { background: #16a34a; color: white; }
+        .badge-docente { background: #d97706; color: white; }
+        .badge-estudiante { background: #2563eb; color: white; }
+        .status-active { color: #00843D; }
+        .status-inactive { color: #dc2626; }
+        
+        /* BOTONES MICRO - Lo más pequeño posible */
+        .btn-micro {
+            padding: 2px 6px !important;
+            font-size: 10px !important;
+            border-radius: 3px !important;
+            display: inline-block !important;
+            text-align: center !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            border: none !important;
+            margin: 0 2px !important;
+            line-height: 1.2 !important;
+        }
+        .btn-micro i {
+            font-size: 9px !important;
+            margin-right: 2px !important;
+        }
+        .btn-edit { background: #00843D !important; color: white !important; }
+        .btn-toggle { background: #f59e0b !important; color: white !important; }
+        .btn-delete { background: #dc2626 !important; color: white !important; }
+        .actions { white-space: nowrap !important; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: white; margin: 5% auto; width: 450px; border-radius: 12px; }
+        .modal-header { background: #00843D; color: white; padding: 15px 20px; display: flex; justify-content: space-between; border-radius: 12px 12px 0 0; }
+        .modal-header .close { color: white; font-size: 28px; cursor: pointer; }
+        .modal-body { padding: 20px; }
+        .modal-body input, .modal-body select { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; }
+        .modal-body label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; }
+        .modal-footer { padding: 15px 20px; background: #f8f9fa; text-align: right; border-radius: 0 0 12px 12px; }
+        .btn-save { background: #00843D; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; }
+        .btn-cancel { background: #6c757d; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header"><i class="fas fa-university"></i><h2>Panel Administrador</h2><p>UTS Saber Pro</p></div>
+        <div class="nav-menu">
+            <a href="/admin/dashboard" class="nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/admin/usuarios" class="nav-item active"><i class="fas fa-users"></i> Usuarios</a>
+            <a href="/admin/crear-usuario" class="nav-item"><i class="fas fa-user-plus"></i> Crear Usuario</a>
+            <a href="/admin/carreras" class="nav-item"><i class="fas fa-graduation-cap"></i> Carreras</a>
+            <a href="/admin/facultades" class="nav-item"><i class="fas fa-building"></i> Facultades</a>
+            <a href="/admin/sedes" class="nav-item"><i class="fas fa-map-marker-alt"></i> Sedes</a>
+            <a href="/admin/recibos" class="nav-item"><i class="fas fa-receipt"></i> Recibos</a>
+            <a href="/admin/resoluciones" class="nav-item"><i class="fas fa-file-pdf"></i> Resoluciones</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="page-title"><h1>Usuarios</h1></div>
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        </div>
+        <div class="card">
+            <div class="card-header"><h2><i class="fas fa-list"></i> Lista de usuarios</h2></div>
+            <div class="card-body">
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Cédula</th><th>Sede</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="u : ${usuarios}">
+                                <td th:text="${u.id}">1</td>
+                                <td th:text="${u.nombre} + ' ' + ${u.apellido}">-</td>
+                                <td th:text="${u.email}">-</td>
+                                <td th:text="${u.cedula}">-</td>
+                                <td th:text="${u.sede != null ? u.sede.nombre : 'Sin sede'}">-</td>
+                                <td>
+                                    <span class="badge badge-admin" th:if="${u.rol.name() == 'ADMIN'}">Admin</span>
+                                    <span class="badge badge-coordinacion" th:if="${u.rol.name() == 'COORDINACION'}">Coord</span>
+                                    <span class="badge badge-docente" th:if="${u.rol.name() == 'DOCENTE'}">Docente</span>
+                                    <span class="badge badge-estudiante" th:if="${u.rol.name() == 'ESTUDIANTE'}">Estudiante</span>
+                                </td>
+                                <td><span class="status-active" th:if="${u.activo}">Activo</span><span class="status-inactive" th:unless="${u.activo}">Inactivo</span></td>
+                                <td class="actions">
+                                    <button class="btn-micro btn-edit" th:data-id="${u.id}" th:data-nombre="${u.nombre}" th:data-apellido="${u.apellido}" th:data-telefono="${u.telefono}" th:data-sede-id="${u.sede != null ? u.sede.id : ''}" onclick="abrirModal(this)"><i class="fas fa-edit"></i> Editar</button>
+                                    <a th:href="@{/admin/usuario/toggle/{id}(id=${u.id})}" class="btn-micro btn-toggle"><i class="fas fa-toggle-on"></i> Activar</a>
+                                    <a th:href="@{/admin/usuario/eliminar/{id}(id=${u.id})}" class="btn-micro btn-delete" onclick="return confirm('¿Eliminar?')"><i class="fas fa-trash"></i> Eliminar</a>
+                                </td>
+                            </tr>
+                            <tr th:if="${usuarios == null or usuarios.isEmpty()}">
+                                <td colspan="8">No hay usuarios</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Editar Usuario</h3><span class="close" onclick="cerrarModal()">&times;</span></div>
+            <form id="editForm" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="editId">
+                    <label>Nombre</label><input type="text" name="nombre" id="editNombre" required>
+                    <label>Apellido</label><input type="text" name="apellido" id="editApellido" required>
+                    <label>Teléfono</label><input type="text" name="telefono" id="editTelefono">
+                    <label>Sede</label>
+                    <select name="sedeId" id="editSedeId">
+                        <option value="">Seleccionar sede</option>
+                        <option th:each="s : ${sedes}" th:value="${s.id}" th:text="${s.nombre}"></option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+                    <button type="submit" class="btn-save">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function abrirModal(btn) {
+            document.getElementById('editId').value = btn.getAttribute('data-id');
+            document.getElementById('editNombre').value = btn.getAttribute('data-nombre');
+            document.getElementById('editApellido').value = btn.getAttribute('data-apellido');
+            document.getElementById('editTelefono').value = btn.getAttribute('data-telefono') || '';
+            document.getElementById('editSedeId').value = btn.getAttribute('data-sede-id') || '';
+            document.getElementById('editForm').action = '/admin/usuario/actualizar/' + btn.getAttribute('data-id');
+            document.getElementById('editModal').style.display = 'block';
+        }
+        function cerrarModal() { document.getElementById('editModal').style.display = 'none'; }
+        window.onclick = function(event) { if (event.target == document.getElementById('editModal')) cerrarModal(); }
+    </script>
+</body>
+</html>
