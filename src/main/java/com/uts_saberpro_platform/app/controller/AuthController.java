@@ -29,7 +29,12 @@ public class AuthController {
     
     @GetMapping("/")
     public String root() {
-        return "redirect:/login";
+        return "redirect:/landing";
+    }
+    
+    @GetMapping("/landing")
+    public String landingPage() {
+        return "landing";
     }
     
     @GetMapping("/login")
